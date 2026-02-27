@@ -1,0 +1,1346 @@
+:root {
+    --bg-color: var(--tg-theme-bg-color, #ffffff);
+    --text-color: var(--tg-theme-text-color, #000000);
+    --hint-color: var(--tg-theme-hint-color, #999999);
+    --link-color: var(--tg-theme-link-color, #2481cc);
+    --button-color: var(--tg-theme-button-color, #40a7e3);
+    --button-text-color: var(--tg-theme-button-text-color, #ffffff);
+    --secondary-bg-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    
+    /* Новые цвета для дней */
+    --past-day-bg: #f5f5f5;
+    --past-day-text: #aaa;
+    --past-day-border: #e0e0e0;
+    --current-day-bg: var(--button-color);
+    --current-day-text: white;
+    --future-day-bg: white;
+    --future-day-text: var(--text-color);
+    --future-day-border: #e0e0e0;
+    --day-hover-bg: var(--button-color);
+    --day-hover-text: white;
+    
+    /* Для темной темы Telegram */
+    --dark-past-day-bg: #2a2a2a;
+    --dark-past-day-text: #666;
+    --dark-past-day-border: #333;
+    --dark-future-day-bg: #1f1f1f;
+    --dark-future-day-text: #fff;
+    --dark-future-day-border: #333;
+}
+
+/* Темная тема Telegram */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --past-day-bg: var(--dark-past-day-bg);
+        --past-day-text: var(--dark-past-day-text);
+        --past-day-border: var(--dark-past-day-border);
+        --future-day-bg: var(--dark-future-day-bg);
+        --future-day-text: var(--dark-future-day-text);
+        --future-day-border: var(--dark-future-day-border);
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.app {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--hint-color);
+    flex-direction: column;
+}
+
+.calendar-select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--hint-color);
+    border-radius: 8px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.icon-btn {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s;
+    min-width: 40px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+#user-info {
+    font-size: 14px;
+    color: var(--hint-color);
+}
+
+.view-toggle-btn {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s;
+    min-width: 40px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-toggle-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.view-toggle-btn:active {
+    transform: scale(0.95);
+}
+
+.calendar-container {
+    background-color: var(--secondary-bg-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+/* Стили для вида дневника */
+.diary-container {
+    background-color: var(--secondary-bg-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.diary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.diary-header button {
+    background: none;
+    border: none;
+    color: var(--button-color);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.diary-header button:hover {
+    background-color: rgba(64, 167, 227, 0.1);
+}
+
+.diary-header button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.diary-days {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.diary-day {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: var(--bg-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.diary-day:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.diary-day.selected {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border-color: var(--button-color);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(64, 167, 227, 0.4);
+}
+
+.diary-day.past {
+    opacity: 0.7;
+    background-color: var(--past-day-bg);
+    color: var(--past-day-text);
+}
+
+.diary-day.current {
+    background-color: var(--current-day-bg);
+    color: var(--current-day-text);
+    border-color: var(--button-color);
+    font-weight: bold;
+}
+
+.diary-day.future {
+    background-color: var(--future-day-bg);
+    color: var(--future-day-text);
+}
+
+.diary-day-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.diary-day-name {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.diary-day-date {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.diary-day-tasks {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.diary-day-tasks-count {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 24px;
+    text-align: center;
+}
+
+.diary-day.selected .diary-day-tasks-count {
+    background-color: var(--button-text-color);
+    color: var(--button-color);
+}
+
+.diary-day.past .diary-day-tasks-count {
+    background-color: var(--past-day-text);
+    color: var(--past-day-bg);
+}
+
+.view-calendar.hidden,
+.view-diary.hidden {
+    display: none !important;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.calendar-header button {
+    background: none;
+    border: none;
+    color: var(--button-color);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.calendar-header button:hover {
+    background-color: rgba(64, 167, 227, 0.1);
+}
+
+.calendar-header button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: 600;
+    color: var(--hint-color);
+    margin-bottom: 8px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+/* Стили для прошедших дней */
+.calendar-day.past {
+    background-color: var(--past-day-bg);
+    color: var(--past-day-text);
+    border: 1px solid var(--past-day-border);
+    opacity: 0.8;
+}
+
+/* Стили для текущего дня */
+.calendar-day.current {
+    background-color: var(--current-day-bg);
+    color: var(--current-day-text);
+    border: 2px solid var(--button-color);
+    font-weight: bold;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(64, 167, 227, 0.3);
+}
+
+/* Стили для будущих дней */
+.calendar-day.future {
+    background-color: var(--future-day-bg);
+    color: var(--future-day-text);
+    border: 1px solid var(--future-day-border);
+}
+
+/* Стили для выбранного дня */
+.calendar-day.selected {
+    background-color: var(--button-color) !important;
+    color: var(--button-text-color) !important;
+    border: 2px solid var(--button-color) !important;
+    transform: scale(1.05);
+    box-shadow: 0 2px 12px rgba(64, 167, 227, 0.4);
+    z-index: 2;
+}
+
+/* Стили для дней с задачами */
+.calendar-day.has-tasks::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    background-color: var(--button-color);
+    border-radius: 50%;
+}
+
+/* Корректировка цвета точки для разных типов дней */
+.calendar-day.past.has-tasks::after {
+    background-color: var(--past-day-text);
+}
+
+.calendar-day.current.has-tasks::after {
+    background-color: var(--current-day-text);
+}
+
+.calendar-day.future.has-tasks::after {
+    background-color: var(--button-color);
+}
+
+.calendar-day.selected.has-tasks::after {
+    background-color: var(--button-text-color);
+}
+
+/* Эффекты при наведении */
+.calendar-day.past:hover:not(.selected) {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    opacity: 1;
+}
+
+.calendar-day.future:hover:not(.selected) {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.calendar-day.current:hover:not(.selected) {
+    transform: scale(1.08);
+}
+
+.calendar-day.empty {
+    background-color: transparent;
+    border: none;
+    cursor: default;
+    opacity: 0.3;
+}
+
+.calendar-day.empty:hover {
+    background-color: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Анимация для нового дня */
+@keyframes newDayPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.calendar-day.current {
+    animation: newDayPulse 2s infinite;
+}
+
+.tasks-container {
+    background-color: var(--secondary-bg-color);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.tasks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.tasks-header h3 {
+    font-size: 18px;
+    color: var(--text-color);
+}
+
+#selectedDate {
+    color: var(--button-color);
+    font-weight: 600;
+}
+
+.add-btn {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s, transform 0.2s;
+}
+
+.add-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.add-btn:active {
+    transform: translateY(0);
+}
+
+.tasks-list {
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* Стилизация скроллбара */
+.tasks-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tasks-list::-webkit-scrollbar-track {
+    background: var(--secondary-bg-color);
+    border-radius: 10px;
+}
+
+.tasks-list::-webkit-scrollbar-thumb {
+    background: var(--button-color);
+    border-radius: 10px;
+}
+
+.tasks-list::-webkit-scrollbar-thumb:hover {
+    background: var(--link-color);
+}
+
+.task-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    background-color: var(--bg-color);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    animation: slideIn 0.3s ease;
+    transition: all 0.3s ease;
+    gap: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.task-item:hover {
+    transform: translateX(2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: var(--button-color);
+}
+
+.task-item.completed {
+    background-color: var(--secondary-bg-color);
+    opacity: 0.8;
+    border-color: var(--hint-color);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.task-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--button-color);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.task-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.task-text {
+    font-size: 16px;
+    word-break: break-word;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+}
+
+.task-text.completed-text {
+    text-decoration: line-through;
+    color: var(--hint-color);
+    opacity: 0.7;
+}
+
+.task-time-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--button-color);
+    font-weight: 600;
+    background: linear-gradient(135deg, rgba(64, 167, 227, 0.1) 0%, rgba(64, 167, 227, 0.05) 100%);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(64, 167, 227, 0.2);
+    width: fit-content;
+}
+
+.time-icon {
+    font-size: 12px;
+}
+
+.time-range, .time-single {
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+.task-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.task-menu-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    color: var(--hint-color);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.task-menu-btn:hover {
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+    transform: scale(1.1);
+}
+
+.task-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: var(--bg-color);
+    border: 1px solid var(--hint-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    z-index: 10;
+    min-width: 140px;
+    overflow: hidden;
+    animation: menuSlideIn 0.2s ease;
+    display: none;
+}
+
+@keyframes menuSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes menuSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--secondary-bg-color);
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item:hover {
+    background-color: var(--secondary-bg-color);
+    transform: translateX(2px);
+}
+
+.menu-item.edit-task {
+    color: var(--button-color);
+}
+
+.menu-item.edit-task:hover {
+    background-color: rgba(64, 167, 227, 0.1);
+}
+
+.menu-item.delete-task {
+    color: #ff4444;
+}
+
+.menu-item.delete-task:hover {
+    background-color: rgba(255, 68, 68, 0.1);
+}
+
+.menu-icon {
+    font-size: 14px;
+    width: 16px;
+    text-align: center;
+}
+
+.task-edit-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--button-color);
+    border-radius: 8px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    margin-top: 8px;
+    transition: all 0.3s ease;
+}
+
+.task-edit-input:focus {
+    border-color: var(--button-color);
+    box-shadow: 0 0 0 3px rgba(64, 167, 227, 0.15);
+    background-color: var(--bg-color);
+}
+
+.time-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.time-inputs input[type="time"] {
+    padding: 8px 12px;
+    border: 1px solid var(--hint-color);
+    border-radius: 8px;
+    background: var(--secondary-bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+.time-period-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.task-time-badge {
+    font-size: 12px;
+    color: var(--hint-color);
+    margin-left: 8px;
+}
+
+.no-tasks {
+    text-align: center;
+    color: var(--hint-color);
+    padding: 40px 0;
+    font-style: italic;
+}
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.modal.show {
+    display: flex;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(8px);
+    }
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    padding: 28px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-content h3 {
+    margin-bottom: 24px;
+    color: var(--text-color);
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+}
+
+.modal-content h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--button-color), var(--link-color));
+    border-radius: 2px;
+}
+
+.modal-content input[type="text"] {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid var(--hint-color);
+    border-radius: 12px;
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.modal-content input[type="text"]:focus {
+    border-color: var(--button-color);
+    box-shadow: 0 0 0 3px rgba(64, 167, 227, 0.15);
+    background-color: var(--bg-color);
+}
+
+.modal-content input[type="text"]::placeholder {
+    color: var(--hint-color);
+    opacity: 0.7;
+}
+
+/* Стили для чекбоксов времени */
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.form-group label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-color);
+    cursor: pointer;
+    user-select: none;
+}
+
+.form-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--button-color);
+    cursor: pointer;
+}
+
+/* Группа времени */
+#taskTimeGroup {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--secondary-bg-color) 0%, rgba(64, 167, 227, 0.05) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(64, 167, 227, 0.1);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 200px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+#taskTimeGroup label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+.time-inputs {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: end;
+}
+
+.time-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.time-field label {
+    font-size: 12px;
+    color: var(--hint-color);
+    font-weight: 500;
+    text-align: left;
+}
+
+.time-period-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+}
+
+.time-period-toggle input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--button-color);
+    cursor: pointer;
+}
+
+.time-period-toggle label {
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+.time-period-toggle label:hover {
+    transform: scale(1.1);
+}
+
+/* Кнопки модального окна */
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 28px;
+}
+
+.modal-buttons button {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 100px;
+    position: relative;
+    overflow: hidden;
+}
+
+#saveTaskBtn {
+    background: linear-gradient(135deg, var(--button-color) 0%, var(--link-color) 100%);
+    color: var(--button-text-color);
+    box-shadow: 0 4px 15px rgba(64, 167, 227, 0.3);
+}
+
+#saveTaskBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(64, 167, 227, 0.4);
+}
+
+#saveTaskBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(64, 167, 227, 0.3);
+}
+
+#closeModalBtn {
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+    border: 2px solid var(--hint-color);
+}
+
+#closeModalBtn:hover {
+    background-color: var(--hint-color);
+    color: var(--bg-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+#closeModalBtn:active {
+    transform: translateY(0);
+}
+
+/* Статистика */
+.tasks-stats {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--hint-color);
+    text-align: center;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .app {
+        padding: 8px;
+    }
+    
+    .calendar-day {
+        font-size: 14px;
+    }
+    
+    .calendar-day.current {
+        transform: scale(1.03);
+    }
+    
+    .tasks-header h3 {
+        font-size: 16px;
+    }
+    
+    .add-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 320px) {
+    .calendar-day {
+        font-size: 12px;
+    }
+    
+    .task-text {
+        font-size: 14px;
+    }
+}
+
+/* Стили для модальных окон управления календарем */
+.modal-content.large {
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--secondary-bg-color);
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.tabs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.tabs::-webkit-scrollbar-thumb {
+    background: var(--hint-color);
+    border-radius: 4px;
+}
+
+.tab-btn {
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    color: var(--hint-color);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.3s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.tab-btn.active {
+    color: var(--button-color);
+    border-bottom-color: var(--button-color);
+}
+
+.tab-btn[style*="display: none"] {
+    display: none !important;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group2 {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--hint-color);
+    border-radius: 8px;
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.btn-primary {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.member-item {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.member-info {
+    flex: 1;
+}
+
+.member-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.member-status {
+    font-size: 12px;
+    color: var(--hint-color);
+}
+
+.member-actions {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+    overflow-wrap: break-word;
+    width: 50%;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger-outline {
+    background: none;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.btn-danger-outline:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.invite-item {
+    padding: 12px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.invite-code-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.invite-code-display code {
+    flex: 1;
+    padding: 8px;
+    background-color: var(--bg-color);
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.copy-btn {
+    padding: 8px 12px;
+    border: none;
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.invite-info {
+    margin: 20px 0;
+}
+
+.code-display, .link-display {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.code-display code {
+    flex: 1;
+    padding: 10px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 16px;
+    word-break: break-all;
+}
+
+.link-display input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--hint-color);
+    border-radius: 8px;
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+}
+
+.invite-qr {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.invite-qr canvas {
+    border: 2px solid var(--hint-color);
+    border-radius: 8px;
+    padding: 10px;
+    background-color: white;
+}

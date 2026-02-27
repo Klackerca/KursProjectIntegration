@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Перенаправление всех запросов к API на соответствующие PHP файлы
+    RewriteRule ^api/auth$ api/auth.php [L]
+    RewriteRule ^api/get_tasks$ api/get_tasks.php [L]
+    RewriteRule ^api/add_task$ api/add_task.php [L]
+    RewriteRule ^api/update_task$ api/update_task.php [L]
+    RewriteRule ^api/delete_task$ api/delete_task.php [L]
+    
+    # Разрешить доступ к статическим файлам
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^static/(.*)$ static/$1 [L]
+</IfModule>
+
+# Защита от просмотра директорий
+Options -Indexes
+
+# Настройки PHP (если нужно)
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>

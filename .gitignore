@@ -1,0 +1,22 @@
+# Файл с секретными данными
+node_modules/
+.env
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# IDE файлы
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Логи
+*.log
+
+# Временные файлы
+*.tmp
+*.temp
+
