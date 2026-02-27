@@ -3,7 +3,7 @@ const axios = require('axios');
 require('dotenv').config({ path: '../.env' });
 const mysql = require('mysql2/promise');
 
-const bot = new TelegramBot('8498231338:AAEsun1mwIrQ0ORwTL2S_1L66f1esbFT-k4', {polling: true});
+const bot = new TelegramBot('8498231338:AAE6f1esbFT-k4', {polling: true});
 
 // Настройки подключения к БД
 const dbConfig = {
